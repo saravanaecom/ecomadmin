@@ -56,7 +56,7 @@ export const fetchSelectCategory = async (adminId) => {
 export const deleteSubCategory = async (Id) => {
     try {
       let objlist = { Id: Id };
-      const response = await fetch(`${APIRoutes.APP_DELETEBANNERPOST}`, {
+      const response = await fetch(`${APIRoutes.APP_DELETESUBCATEGORY}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
