@@ -52,7 +52,7 @@ const RecentOrders = () => {
   };
 
   return (
-    <div className="container mx-auto  px-4 py-8" style={{ position: "relative", right: "65px", top:"45px", width: "1200px", zIndex: "-10" }}>
+    <div className="container mx-auto  px-4 py-8" style={{ position: "relative", right: "5px", top:"45px", width: "1200px", zIndex: "-10" }}>
       <div className="bg-white shadow-lg rounded-lg overflow-hidden">
         <div className="bg-gray-200 p-6">
           <h5 className="text-2xl font-semibold text-gray-800">Recent Orders</h5>

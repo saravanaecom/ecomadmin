@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import AdminLogo from '../assets/P2-Music-Shop.png';
+import AdminLogo from '../assets/logo.png';
 import { IoMdMenu } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
 import '../index.css'

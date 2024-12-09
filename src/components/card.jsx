@@ -33,7 +33,7 @@ const Card = ({ top = "0" }) => {
     );
   }
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-6 z- -10">
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-6 z-10 left-12 position: relative">
       
       <div
         className="relative p-4 bg-[#f3f3f3] border border-gray-300 rounded-lg shadow-lg"
