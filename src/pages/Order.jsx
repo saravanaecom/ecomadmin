@@ -56,6 +56,7 @@ const Orders = () => {
       if (data && Array.isArray(data)) {
         localStorage.setItem("ordereditdetails",JSON.stringify(data));
         setOrders(data);
+        console.log(data)
       } else {
         throw new Error("Unexpected API response");
       }
@@ -132,7 +133,7 @@ const Orders = () => {
                 ))}
               </select>
             </div>
-            <div>
+            {/* <div>
               <label className="block text-sm font-medium">Branch</label>
               <select
                 value={branchId}
@@ -146,7 +147,7 @@ const Orders = () => {
                   </option>
                 ))}
               </select>
-            </div>
+            </div> */}
           </div>
 
           <button
@@ -183,22 +184,14 @@ const Orders = () => {
               <td className="px-6 py-4 text-sm font-medium text-gray-700">{order.OrderNo}</td>
               <td className="px-6 py-4 text-sm font-medium text-gray-700">
               {new Date(order.OrderDate).toLocaleDateString('en-GB')}</td>
-              
+              {console.log(order)}
               <td className="px-6 py-4 text-sm font-medium text-gray-700">{order.CustomerName}</td>
               <td className="px-6 py-4 text-sm font-medium text-gray-700">{order.OrderType}</td>
               <td className="px-6 py-4 text-sm font-medium text-gray-700">₹{order.NetAmt}</td>
               <td className="px-6 py-4 text-sm font-medium text-gray-700">
                   {new Date(order.DeliveryDate).toLocaleDateString('en-GB')}</td>
               <td className="px-6 py-4 text-sm font-medium text-gray-700">
-                {order.orderstatus === 'Active' ? (
-                  <span className="inline-block bg-green-100 text-green-600 px-3 py-1 rounded-full text-xs font-medium">
-                    Active
-                  </span>
-                ) : (
-                  <span className="inline-block bg-red-100 text-red-600 px-3 py-1 rounded-full text-xs font-medium">
-                    Inactive
-                  </span>
-                )}
+                {order.orderstatus}
               </td>
               <td className="px-6 py-4 text-sm font-medium text-gray-700 flex space-x-4">
                 {/* Edit Button */}
