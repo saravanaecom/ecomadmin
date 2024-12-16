@@ -80,7 +80,7 @@ const [isProductsOpen, setIsProductsOpen] = useState(false);
                 <span>Branch</span>
               </button>
             </li>
-            <li>
+            {/* <li>
               <div className="group">
                 <button
                   onClick={toggleAreas}
@@ -118,8 +118,8 @@ const [isProductsOpen, setIsProductsOpen] = useState(false);
                   </ul>
                 )}
               </div>
-            </li>
-            <li>
+            </li> */}
+            {/* <li>
               <div className="group">
                 <button
                   onClick={toggleDeliveryTime }
@@ -157,46 +157,8 @@ const [isProductsOpen, setIsProductsOpen] = useState(false);
                   </ul>
                 )}
               </div>
-            </li>
-            <li>
-              <div className="group">
-                <button
-                  onClick={toggleOffer }
-                  className="flex items-center justify-between w-full p-3 rounded-lg hover:bg-gray-700 transition focus:outline-none"
-                 
-                >
-                  <span className="flex items-center gap-3 text-md font-900 text-white">
-                    <i className="bi bi-briefcase text-md"></i>
-                    <span>Offer Post</span>
-                  </span>
-                  <i
-                    className={`bi bi-chevron-down transition-transform ${
-                      isOfferOpen ? 'rotate-180' : ''
-                    }`}
-                  ></i>
-                </button>
-                {isOfferOpen && (
-                  <ul className="ml-6 mt-2 space-y-2">
-                    <li>
-                      <button
-                        onClick={() => navigate("/OfferPost")}
-                        className="block p-2 rounded-lg hover:bg-gray-600 text-white"
-                      >
-                         Posters
-                      </button>
-                    </li>
-                    <li>
-                      <button
-                         onClick={() => navigate("/AddOfferPost/:id")}
-                        className="block p-2 rounded-lg hover:bg-gray-600 text-white"
-                      >
-                        Posters
-                      </button>
-                    </li>
-                  </ul>
-                )}
-              </div>
-            </li>
+            </li> */}
+          
             {/* <li>
               <div className="group">
                 <button
@@ -324,7 +286,45 @@ const [isProductsOpen, setIsProductsOpen] = useState(false);
                 )}
               </div>
             </li>
-            
+            <li>
+              <div className="group">
+                <button
+                  onClick={toggleOffer }
+                  className="flex items-center justify-between w-full p-3 rounded-lg hover:bg-gray-700 transition focus:outline-none"
+                 
+                >
+                  <span className="flex items-center gap-3 text-md font-900 text-white">
+                    <i className="bi bi-briefcase text-md"></i>
+                    <span>Offer Post</span>
+                  </span>
+                  <i
+                    className={`bi bi-chevron-down transition-transform ${
+                      isOfferOpen ? 'rotate-180' : ''
+                    }`}
+                  ></i>
+                </button>
+                {isOfferOpen && (
+                  <ul className="ml-6 mt-2 space-y-2">
+                    <li>
+                      <button
+                        onClick={() => navigate("/OfferPost")}
+                        className="block p-2 rounded-lg hover:bg-gray-600 text-white"
+                      >
+                         Posters
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                         onClick={() => navigate("/AddOfferPost/:id")}
+                        className="block p-2 rounded-lg hover:bg-gray-600 text-white"
+                      >
+                        Posters
+                      </button>
+                    </li>
+                  </ul>
+                )}
+              </div>
+            </li>
             <li>
               <div className="group">
                 <button
