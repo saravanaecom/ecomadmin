@@ -8,6 +8,7 @@ import SuccessModal from "../components/sucessmodel";
 import { MdDelete } from "react-icons/md";
 import { GrEdit } from "react-icons/gr";
 import "../index.css";
+import { fetchSelectCategory,fetchSelectsubCategoryid,fetchMultiplePriceListNew,fetchProductIdAdmin,insertProduct } from "../services/addproducts";
 
 const AllProducts = () => {
   const [rows, setRows] = useState(5);
@@ -22,6 +23,11 @@ const AllProducts = () => {
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [dsubcategory, setSubCategoryd] = useState([]);
+  const [category, setCategory] = useState([]);
+  const [categoryid, setCategoryid] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState("");
   const navigate = useNavigate();
 
   // Fetch admin ID from local storage
@@ -35,45 +41,111 @@ const AllProducts = () => {
     }
   }, [navigate]);
 
+
+
+
+  // category and SubCategory
+  useEffect(() => {
+    const fetchCategories = async () => {
+      setLoading(true);
+      try {
+        const categoriesData = await fetchSelectCategory(adminId);
+        console.log(categoriesData)
+        setCategory(categoriesData);
+      } catch (error) {
+        console.error("Failed to fetch categories", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchCategories();
+  }, [adminId]);
+
+  useEffect(() => {
+    if (categoryid) {
+      setLoading(true);
+      const fetchSubCategories = async () => {
+        try {
+          const subcategoriesData = await fetchSelectsubCategoryid(adminId, categoryid);
+          
+          setSubCategoryd(subcategoriesData);
+        } catch (error) {
+          console.error("Failed to fetch subcategories", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchSubCategories();
+    }
+  }, [categoryid, adminId]);
+
+  ///////
   // Fetch products
   useEffect(() => {
     if (adminId) {
-      fetchSelectProductData();
+      setLoading(true);
+      const fetchProducts = async () => {
+        try {
+          const productsData = await fetchSelectProduct(adminId);
+          localStorage.setItem("AdminProductList", JSON.stringify(productsData));
+          setProducts(productsData);
+          setFilteredProducts(productsData);
+          setTotalPages(Math.ceil(productsData.length / rows));
+        } catch (error) {
+          console.error("Failed to fetch products", error);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchProducts();
     }
-  }, [adminId]);
-
-  // Fetch products based on adminId
-  const fetchSelectProductData = async () => {
-    setLoading(true);
-    try {
-      const data = await fetchSelectProduct(adminId);
-      if (data) {
-        localStorage.setItem("AdminProductList", JSON.stringify(data));
-        setProducts(data);
-        setFilteredProducts(data);
-        setTotalPages(Math.ceil(data.length / rows));
+  }, [adminId, rows]);
+ 
+  useEffect(()=>{
+    const catfiltered = products.filter((product) => {
+      if (categoryid && selectedCategory) {
+        return product.CId === parseInt(categoryid) && 
+               product.SId === parseInt(selectedCategory);
       }
-    } catch (err) {
-      setErrorMessage("The product list could not be loaded.");
-      setIsErrorModalOpen(true);
-    } finally {
-      setLoading(false);
-    }
-  };
+      else if (categoryid) {
+        return product.CId === parseInt(categoryid);
+      }
 
-  // Filter products based on search
-  useEffect(() => {
-    const filtered = products.filter((product) =>
-      searchKey
-        ? product.Description.toLowerCase().includes(searchKey.toLowerCase()) ||
+      else if (selectedCategory) {
+        return product.SId === parseInt(selectedCategory);
+      }
+      return true;
+   
+   });
+
+   const searchFiltered = searchKey 
+      ? catfiltered.filter((product) =>
+          product.Description.toLowerCase().includes(searchKey.toLowerCase()) ||
           product.ProductCode.toLowerCase().includes(searchKey.toLowerCase()) ||
           product.SubCategoryName.toLowerCase().includes(searchKey.toLowerCase())
-        : true
-    );
-    setFilteredProducts(filtered);
-    setTotalPages(Math.ceil(filtered.length / rows));
-    setCurrentPage(1); // Reset to first page after filtering
-  }, [searchKey, products, rows]);
+        )
+      : catfiltered;
+  
+    setFilteredProducts(searchFiltered);
+    setTotalPages(Math.ceil(searchFiltered.length / rows));
+    setCurrentPage(1);
+
+  },[products, categoryid, selectedCategory, searchKey, rows])
+
+
+  // Filter products based on search
+  // useEffect(() => {
+  //   const filtered = products.filter((product) =>
+  //     searchKey
+  //       ? product.Description.toLowerCase().includes(searchKey.toLowerCase()) ||
+  //         product.ProductCode.toLowerCase().includes(searchKey.toLowerCase()) ||
+  //         product.SubCategoryName.toLowerCase().includes(searchKey.toLowerCase())
+  //       : true
+  //   );
+  //   setFilteredProducts(filtered);
+  //   setTotalPages(Math.ceil(filtered.length / rows));
+  //   setCurrentPage(1); // Reset to first page after filtering
+  // }, [searchKey, products, rows]);
 
   // Pagination
   const paginatedProducts = filteredProducts.slice(
@@ -101,11 +173,14 @@ const AllProducts = () => {
   };
 
   const handleDeleteClick = async (id) => {
+
+    setIsModalOpen(true);
     const confirmDelete = window.confirm("Are you sure you want to delete this product?");
     if (!confirmDelete) return;
 
     try {
       const isDeleted = await Deleteproduct(id);
+      
       if (isDeleted) {
         setProducts((prevProducts) =>
           prevProducts.filter((product) => product.Id !== id)
@@ -137,6 +212,35 @@ const AllProducts = () => {
                 placeholder="Search Products..."
                 className="border border-gray-300 rounded-lg px-4 py-2 w-64 focus:ring-2 focus:ring-blue-400 focus:outline-none"
               />
+
+<select
+                  value={categoryid} 
+                  onChange={(e) => setCategoryid(e.target.value)} 
+                className="border border-gray-300 rounded-lg px-4 py-2 w-64 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              >
+                <option value="">Select Category</option>
+                {category.map((item) => (
+            <option key={item.Id} value={item.Id}>
+              {item.Category}
+            </option>
+             ))}
+              </select> 
+         <select
+             value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="border border-gray-300 rounded-lg px-4 py-2 w-64 focus:ring-2 focus:ring-blue-400 focus:outline-none"
+              >
+                <option value="">Select SubCategory</option>
+                {dsubcategory.length > 0 ? (
+                 dsubcategory.map((item) => (
+                <option key={item.Id} value={item.Id}>
+                  {item.SubCategory}
+                </option>
+                ))
+                ) : (
+                <option disabled>No subcategories available</option>
+                 )}
+              </select>
               <button
                 onClick={() => handleNavigate()}
                 className="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded-lg shadow"

@@ -4,11 +4,22 @@ import ErrorModal from "../components/error";
 import ServerURL from "../server/serverUrl";
 import { ImagePathRoutes } from '../routes/imagePathRoutes';
 import SuccessModal from "../components/sucessmodel";
-
+import ReactQuill from 'react-quill';
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { fetchSelectCategory,fetchSelectsubCategoryid,fetchMultiplePriceListNew,fetchProductIdAdmin,insertProduct } from "../services/addproducts";
+import 'react-quill/dist/quill.snow.css';
 
 const AddProductForm = () => {
+
+  const toolbarOptions = [
+    [{ font: [] }], // Font styles
+    [{ size: ["small", false, "large", "huge"] }], // Font sizes
+    ["bold", "italic", "underline", "strike"], // Bold, italic, underline
+    [{ list: "ordered" }, { list: "bullet" }], // Lists
+    ["link", "image"], // Links and images
+    [{ align: [] }], // Text alignment
+    ["clean"], // Clear formatting
+  ];
   const location = useLocation(); 
   const { id } = useParams();
   const [productCode, setProductCode] = useState('');
@@ -216,7 +227,7 @@ console.log(SubItemsList)
         const NewProduct =products.NewProduct === 1 ? true : false;
         const TopProduct =products.FeatureProduct === 1 ? true : false;
         const Instock =products.InStock === 1 ? true : false;
-        const ProductDescription =products.ProductDescription;
+        const ProductDescription = products.ProductDescription ? products.ProductDescription : '';
         setProductCode(productcode);
         setProductName(productname);
         setTamilName(producttamilname);
@@ -225,9 +236,7 @@ console.log(SubItemsList)
         setMrp(MRPRate);
         setSaleRate(SaleRateed);
         setMultiplePrice(AddMultiplPrices);
-     
-        
-      
+
         setInStock(Instock);
         setActiveStatus(activestatus);
         setOfferProduct(OfferProduct);
@@ -376,7 +385,7 @@ console.log(SubItemsList)
         }, 1500);
        
       } else {
-        setErrorMessage("Failed to save the offer.");
+        setErrorMessage("Failed to save the Product.");
         setIsErrorModalOpen(true);
       }
     } catch (error) {
@@ -781,14 +790,26 @@ console.log(SubItemsList)
 
                   </div>
                   <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700">Product Description</label>
-                      <textarea
-                        className="mt-1 block w-full px-4 py-2 rounded-md border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
-                        value={productDescription}
-                        onChange={(e) => setProductDescription(e.target.value)}
-                      />
-                    </div>
+                  <div className="space-y-4">
+      <div>
+        <label className="block text-sm font-medium text-gray-700">
+          Product Description
+        </label>
+        <ReactQuill
+          value={productDescription}
+          onChange={setProductDescription}
+          modules={{
+            toolbar: toolbarOptions,
+          }}
+          placeholder="Enter description"
+          className="mt-1 block w-full rounded-md border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
+        />
+        <p className="text-sm text-gray-500 mt-2">
+          Word count: {productDescription.split(" ").filter(Boolean).length}
+        </p>
+      </div>
+    </div>
+
  <div>
    
  <div className="space-y-4">
