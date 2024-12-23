@@ -35,6 +35,7 @@ const AddProductForm = () => {
   const [subCategory, setSubCategory] = useState("");
   const [mrp, setMrp] = useState();
   const [saleRate, setSaleRate] = useState();
+  const[AproximiateDate,setAproximiate] =useState();
   const [multiplePrice, setMultiplePrice] = useState(false);
   const[multiplepricemrp,setMultipricemrp]=useState("")
   const[multiplepriceweightType,setMultipriceweightType]=useState("")
@@ -371,6 +372,7 @@ console.log(SubItemsList)
             MultiplePriceEnbled: multiplePrice ? 1 : 0,
             ProductWeightType:  [],
             ActiveStatus: activeStatus ? 1 : 0,
+            Aproximiatedays:AproximiateDate
 
     };
    console.log(objlist)
@@ -379,7 +381,7 @@ console.log(SubItemsList)
       if (success) {
         setSuccessMessage("product saved successfully!");
         setIsSuccessModalOpen(true);
-
+       
         setTimeout(() => {
           navigate(`/AllProducts`);
         }, 1500);
@@ -596,6 +598,16 @@ console.log(SubItemsList)
                         className="mt-1 block w-full px-4 py-2 rounded-md border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
                         value={saleRate}
                         onChange={(e) => setSaleRate(e.target.value)}
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700">Aproximiate develiry date <span className="text-red-500">*</span></label>
+                      <input
+                        type="text"
+                        className="mt-1 block w-full px-4 py-2 rounded-md border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
+                        value={AproximiateDate}
+                        onChange={(e) => setAproximiate(e.target.value)}
                       />
                     </div>
 
