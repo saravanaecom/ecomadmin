@@ -54,7 +54,7 @@ const Brand = () => {
       const success = await insertBrand([objlist], adminId);
       if (success) {
         alert("Brand saved successfully!");
-        navigate(`/AllProducts`);
+        navigate(`/AllBrand`);
       } else {
         alert("Failed to save the brand.");
       }
