@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root {
+    --page-bg-color: #f7f7f7;        /* Background color */
+    --primary-text-color: #4a4a4a;      /* Text color */
+    --primary-button-bg: #083983;       /* Button background color */
+    --primary-button-text: #ffffff;     /* Button text color */
+    --success-bg: #d1fad8;              /* Success background */
+    --error-bg: #fee2e2;                /* Error background */
+    --hover-effect: rgba(0, 0, 0, 0.1); /* Hover effect for buttons */
+    --border-color: #e5e7eb;            /* Border color */
+    --table-header-bg: #f3f4f6;         /* Table header background */
+    --active-status-color: #10b981;     /* Active status color */
+    --inactive-status-color: #f87171; 
+    --primary-bg-color: #3b82f6; /* Blue */
+    --secondary-bg-color: #4b5563; /* Gray */
+    --text-color: #f3f4f6; /* Light Gray */
+    --hover-bg-color: #2d3748; /* Dark Gray */
+    --border-color: #374151;
+    --button-color: /* Darker Gray *//* Inactive status color */
+  }
+  
+  
