@@ -9,6 +9,8 @@ import { MdDelete } from "react-icons/md";
 import { GrEdit } from "react-icons/gr";
 import "../index.css";
 import { fetchSelectCategory,fetchSelectsubCategoryid,fetchMultiplePriceListNew,fetchProductIdAdmin,insertProduct } from "../services/addproducts";
+import * as XLSX from 'xlsx';
+
 
 const AllProducts = () => {
   const [rows, setRows] = useState(5);
@@ -29,8 +31,116 @@ const AllProducts = () => {
   const [categoryid, setCategoryid] = useState('');
   const [selectedCategory, setSelectedCategory] = useState("");
   const navigate = useNavigate();
+  const [excelFile, setExcelFile] = useState(null);
+  const [typeError, setTypeError] = useState(null);
+  const [excelData, setExcelData] = useState([]);
 
 
+
+
+
+    // onchange event
+    const handleFile=(e)=>{
+      let fileTypes = ['application/vnd.ms-excel','application/vnd.openxmlformats-officedocument.spreadsheetml.sheet','text/csv'];
+      let selectedFile = e.target.files[0];
+      if(selectedFile){
+        if(selectedFile&&fileTypes.includes(selectedFile.type)){
+          setTypeError(null);
+          let reader = new FileReader();
+          reader.readAsArrayBuffer(selectedFile);
+          reader.onload=(e)=>{
+            setExcelFile(e.target.result);
+          }
+        }
+        else{
+          setTypeError('Please select only excel file types');
+          setExcelFile(null);
+        }
+      }
+      else{
+        console.log('Please select your file');
+      }
+    }
+
+    const handleFileSubmit = (e) => {
+      e.preventDefault();
+      if (excelFile !== null) {
+        const workbook = XLSX.read(excelFile, { type: "binary" });
+        const worksheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[worksheetName];
+        const data = XLSX.utils.sheet_to_json(worksheet);
+        setExcelData(data.slice(0, 10)); // Defaults to an array
+      } else {
+        setExcelData([]); // Ensure it's always an array
+      }
+    };
+    
+    
+    const handleSave = async (e) => {
+      e.preventDefault();
+      setLoading(true);
+    
+      try {
+        
+        const productsToSave = excelData.map((product) => {
+          return {
+            Comid:adminId,
+            ProductCode: product.ProductCode,
+            ProductName: product.ProductName,
+            CategoryId: 0, 
+            SubCategoryId: 0, 
+            SubCategory:product.SubCategory,
+            Category:product.Category,
+            MRP:product.MRP,
+            SalesRate: product.SalesRate,
+            UOM: product.UOM,
+            ImagePath: "Undefined.jpg",
+            img1:"Undefined.jpg",
+            img2:"Undefined.jpg",
+            img3: "Undefined.jpg",
+            img4: "Undefined.jpg",
+            ProductDescription:product.productDescription,
+            Sort: 0,
+            IsStock:  0,
+            OfferProduct:  0,
+            FeatureProduct: 0,
+            FreshProduct: 0,
+            NewProduct:0,
+            MultiplePriceEnabled: 0,
+            ProductWeightType: [],
+            ActiveStatus:1,
+            Aproximiatedays: null,
+            ReturnsAvailability: 0,
+            ReturnPolicyDays: null,
+            OurChoice:0,
+            Brandname:product.Brandname,
+            BrandId:0
+          };
+        });
+        console.log(productsToSave);
+    
+        // Insert products
+        const success = await insertProduct(productsToSave);
+    
+        if (success) {
+          setSuccessMessage("Products saved successfully!");
+          setIsSuccessModalOpen(true);
+          setTimeout(() => {
+            navigate(`/AllProducts`);
+          }, 1500);
+        } else {
+          setErrorMessage("Failed to save the products.");
+          setIsErrorModalOpen(true);
+        }
+      } catch (error) {
+        console.error("Error during product insertion:", error);
+        setErrorMessage("An error occurred while saving the products.");
+        setIsErrorModalOpen(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
 
   
   // Fetch Admin ID
@@ -206,6 +316,8 @@ const AllProducts = () => {
                 className="border border-gray-300 rounded-lg px-4 py-2 w-64 focus:ring-2 focus:ring-blue-400 focus:outline-none"
               />
 
+
+
 <select
                 value={categoryid}
                 onChange={(e) => setCategoryid(e.target.value)}
@@ -344,49 +456,106 @@ const AllProducts = () => {
 
           {/* Pagination */}
           {filteredProducts.length > 0 && (
-            <div className="flex justify-between items-center p-4">
-              <select
-                value={rows}
-                onChange={handleRowChange}
-                className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none"
-              >
-                <option value="5">5 Rows</option>
-                <option value="10">10 Rows</option>
-                <option value="15">15 Rows</option>
-                <option value="20">20 Rows</option>
-              </select>
-              <div className="flex items-center space-x-2">
-                <button
-                  onClick={() => handlePageChange("prev")}
-                  disabled={currentPage === 1}
-                  className={`px-3 py-2 rounded-lg ${
-                    currentPage === 1
-                      ? "bg-gray-300 cursor-not-allowed"
-                      : "bg-blue-500 hover:bg-blue-600 text-white"
-                  }`}
-                >
-                  Previous
-                </button>
-                <span className="text-gray-700">
-                  Page {currentPage} of {totalPages}
-                </span>
-                <button
-                  onClick={() => handlePageChange("next")}
-                  disabled={currentPage === totalPages}
-                  className={`px-3 py-2 rounded-lg ${
-                    currentPage === totalPages
-                      ? "bg-gray-300 cursor-not-allowed"
-                      : "bg-blue-500 hover:bg-blue-600 text-white"
-                  }`}
-                >
-                  Next
-                </button>
-              </div>
-            </div>
-          )}
+  <div className="flex justify-between items-center p-6 bg-white shadow-md rounded-lg">
+    {/* Dropdown for rows */}
+    <select
+      value={rows}
+      onChange={handleRowChange}
+      className="border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-400 focus:outline-none text-gray-700"
+    >
+      <option value="5">5 Rows</option>
+      <option value="10">10 Rows</option>
+      <option value="15">15 Rows</option>
+      <option value="20">20 Rows</option>
+    </select>
+
+    {/* File Upload */}
+
+    <div>
+
+    <form
+      className="flex items-center space-x-4"
+      onSubmit={handleFileSubmit}
+    >
+      <input
+        type="file"
+        className="block w-full text-sm text-gray-700 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400"
+        required
+        onChange={handleFile}
+      />
+      <button
+        type="submit"
+        className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md transition-all duration-200"
+      >
+        Upload
+      </button>
+      {typeError && (
+        <div
+          className="text-sm text-red-600 bg-red-100 px-3 py-2 rounded-lg shadow-md"
+          role="alert"
+        >
+          {typeError}
+        </div>
+      )}
+    </form>
+    {excelData && excelData.length > 0 && (
+  <button
+    className="mt-4 bg-blue-500 hover:bg-blue-600 text-black px-4 py-2 rounded-lg shadow-md transition-all duration-200"
+    onClick={handleSave}
+  >
+    Save to Database
+  </button>
+)}
+
+
+ 
+    </div>
+   
+
+
+
+    {/* Pagination */}
+    <div className="flex items-center space-x-4">
+      <button
+        onClick={() => handlePageChange("prev")}
+        disabled={currentPage === 1}
+        className={`px-4 py-2 rounded-lg shadow-md transition-all duration-200 ${
+          currentPage === 1
+            ? "bg-gray-300 cursor-not-allowed text-gray-600"
+            : "bg-blue-500 hover:bg-blue-600 text-white"
+        }`}
+      >
+        Previous
+      </button>
+      <span className="text-gray-700">
+        Page {currentPage} of {totalPages}
+      </span>
+      <button
+        onClick={() => handlePageChange("next")}
+        disabled={currentPage === totalPages}
+        className={`px-4 py-2 rounded-lg shadow-md transition-all duration-200 ${
+          currentPage === totalPages
+            ? "bg-gray-300 cursor-not-allowed text-gray-600"
+            : "bg-blue-500 hover:bg-blue-600 text-white"
+        }`}
+      >
+        Next
+      </button>
+    </div>
+  </div>
+)}
+
+
+
+
+
         </div>
       </div>
+   
 
+
+
+    
       {/* Error Modal */}
       {isErrorModalOpen && (
         <ErrorModal
