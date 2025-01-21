@@ -473,39 +473,41 @@ const AllProducts = () => {
 
     <div>
 
-    <form
-      className="flex items-center space-x-4"
-      onSubmit={handleFileSubmit}
-    >
-      <input
-        type="file"
-        className="block w-full text-sm text-gray-700 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400"
-        required
-        onChange={handleFile}
-      />
-      <button
-        type="submit"
-        className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md transition-all duration-200"
+    <div>
+      <form
+        className="flex items-center space-x-4"
+        onSubmit={handleFileSubmit}
       >
-        Upload
-      </button>
-      {typeError && (
-        <div
-          className="text-sm text-red-600 bg-red-100 px-3 py-2 rounded-lg shadow-md"
-          role="alert"
+        <input
+          type="file"
+          className="block w-full text-sm text-gray-700 border border-gray-300 rounded-lg cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400"
+          required
+          onChange={handleFile}
+        />
+        <button
+          type="submit"
+          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md transition-all duration-200"
         >
-          {typeError}
-        </div>
+          Upload
+        </button>
+        {typeError && (
+          <div
+            className="text-sm text-red-600 bg-red-100 px-3 py-2 rounded-lg shadow-md"
+            role="alert"
+          >
+            {typeError}
+          </div>
+        )}
+      </form>
+      {excelData && excelData.length > 0 && (
+        <button
+          className="mt-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg shadow-md transition-all duration-200"
+          onClick={handleSave}
+        >
+          Save to Database
+        </button>
       )}
-    </form>
-    {excelData && excelData.length > 0 && (
-  <button
-    className="mt-4 bg-blue-500 hover:bg-blue-600 text-black px-4 py-2 rounded-lg shadow-md transition-all duration-200"
-    onClick={handleSave}
-  >
-    Save to Database
-  </button>
-)}
+    </div>
 
 
  
