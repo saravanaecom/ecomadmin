@@ -42,7 +42,6 @@ const DeliveryArea = () => {
       console.log('Please select your file');
     }
   }
-
   const handleFileSubmit = (e) => {
     e.preventDefault();
     if (excelFile !== null) {
@@ -56,9 +55,6 @@ const DeliveryArea = () => {
       setExcelData([]); // Ensure it's always an array
     }
   };
-
-
-
   const handleSave = async (e) => {
     e.preventDefault();
     setLoading(true);
