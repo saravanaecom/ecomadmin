@@ -101,7 +101,7 @@ const AllProducts = () => {
             img4: "Undefined.jpg",
             ProductDescription:product.productDescription,
             Sort: 0,
-            IsStock:  0,
+            IsStock:1,
             OfferProduct:  0,
             FeatureProduct: 0,
             FreshProduct: 0,
