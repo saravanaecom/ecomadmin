@@ -838,7 +838,12 @@ console.log(SubItemsList)
           <option value="Ltr">Ltr</option>
           <option value="Piece">Piece</option>
           <option value="Pocket">Pocket</option>
-          <option value="Box">Box</option>
+          <option value="Box">Pack</option>
+          <option value="Box">Nos</option>
+          <option value="Box">Roll</option>
+          <option value="Box">Set</option>
+          
+
         </select>
       </div>
       {/* Displaying the selected value */}
