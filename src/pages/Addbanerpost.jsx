@@ -6,6 +6,7 @@ import { ImagePathRoutes } from '../routes/imagePathRoutes';
 import { insertbannerpost } from "../services/BannerPost";
 import ErrorModal from "../components/error";
 import SuccessModal from "../components/sucessmodel";
+import { fetchSelectCategory} from "../services/Category";
 const AddBannerPost = () => {
   const { id } = useParams();
   const [Bannerimg1, setBannerimg1] = useState("");
@@ -18,8 +19,11 @@ const AddBannerPost = () => {
   const [errorMessage, setErrorMessage] = useState("");
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
   const [selectcategory,setSelectcategory]=useState("")
-  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);  // State for success modal
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState(""); 
+  const [error, setError] = useState(null); 
+  const [categoryList, setCategoryList] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
 
   const clearForm = () => {
     // Reset all banner image states
@@ -50,7 +54,7 @@ const AddBannerPost = () => {
     setIsErrorModalOpen(false);
   };
 
-  const closeSuccessModal = () => {  // Method to close success modal
+  const closeSuccessModal = () => {  
     setIsSuccessModalOpen(false);
   };
 
@@ -85,6 +89,37 @@ const AddBannerPost = () => {
       }
     }
   }, [id]);
+
+
+// fetch category 
+
+useEffect(() => {
+  if (adminId) {
+    fetchCategoryData();
+  }
+}, [adminId]);
+
+const fetchCategoryData = async () => {
+  setLoading(true);
+  setError(null);
+  try {
+    const data = await fetchSelectCategory(adminId);
+    if (data) {
+      setCategoryList(data);
+      localStorage.setItem("Categories", JSON.stringify(data));
+    }
+  } catch (error) {
+    setError("Error fetching category data: " + error.message);
+    setIsErrorModalOpen(true);
+  } finally {
+    setLoading(false);
+  }
+};
+
+   
+
+
+
 
 
   const handleImageUpload = async (e, type) => {
@@ -125,7 +160,7 @@ const AddBannerPost = () => {
         setIsErrorModalOpen(true);
       } finally {
         setLoading(false);
-        setIsErrorModalOpen(true);
+       
       }
     }
   };
@@ -139,12 +174,21 @@ const AddBannerPost = () => {
     alert("Banner Post Saved!");
   };
 
+  let selectedId;
+
+  if (id && !isNaN(parseInt(id))) {
+    selectedId = parseInt(id);  // Parse the id from the URL if it's a valid number
+  } else {
+    selectedId = selectedCategory;  // Otherwise, use selectedCategory
+  }
+
+
   const handleSave = async (e) => {
     e.preventDefault();
     setLoading(true);
 
-    const objlist = {
-      Id: id ? parseInt(id) : "",
+     const objlist = {
+      Id: selectedId,
       Comid: adminId,
       Category: null,
       ImagePath: null,
@@ -195,20 +239,25 @@ const AddBannerPost = () => {
           </div>
 
           {/* Form Row */}
-          <div className="col-12 p-5">
-            <label className="form-label block text-2xl mb-2 font-bold">Select Category Name</label>
-            <div
-              className="w-full p-3 border border-gray-300 rounded-md text-lg"
-              id="cmbCategoryNew"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-            >
-              {selectcategory && (
-              <h2 className="text-xl font-semibold text-gray-800">{selectcategory}</h2>
-            )}
-             
+          <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+              <select 
+  value={selectedCategory} 
+  onChange={(e) => {
+    console.log("Selected Category ID:", e.target.value);
+    setSelectedCategory(e.target.value);
+  }}
+  className="w-full border rounded-md p-2"
+>
+  <option value="">Select a Category</option>
+  {categoryList.map((item, index) => (
+    <option key={index} value={item.Id}>
+      {item.Category}
+    </option>
+  ))}
+</select>
+
             </div>
-          </div>
           {/* <div className="col-12 p-5">
           <label className="form-label block text-3xl mb-2">Select Category Name</label>
             {/* Display selectcategory as a heading */}
