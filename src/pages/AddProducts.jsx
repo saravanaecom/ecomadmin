@@ -841,7 +841,7 @@ console.log(SubItemsList)
           <option value="Pack">Pack</option>
           <option value="Nos">Nos</option>
           <option value="Set">Set</option>
-          <option value="Set">Roll</option>
+          <option value="Roll">Roll</option>
 
         </select>
       </div>
