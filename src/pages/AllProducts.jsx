@@ -69,14 +69,14 @@ const AllProducts = () => {
         const worksheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[worksheetName];
         const data = XLSX.utils.sheet_to_json(worksheet);
-        setExcelData(data.slice(0, 10)); // Defaults to an array
+        setExcelData(data); // Defaults to an array
       } else {
         setExcelData([]); // Ensure it's always an array
       }
     };
     
     
-    const handleSave = async (e) => {
+       const handleSave = async (e) => {
       e.preventDefault();
       setLoading(true);
     
@@ -117,7 +117,9 @@ const AllProducts = () => {
             BrandId:0
           };
         });
-        console.log(productsToSave);
+
+        const jsonFormattedData = JSON.stringify(productsToSave, null, 2); // Pretty format with indentation
+console.log("Products Data:", jsonFormattedData);
     
         // Insert products
         const success = await insertProduct(productsToSave);
