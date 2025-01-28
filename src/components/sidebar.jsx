@@ -176,7 +176,7 @@ const [isProductsOpen, setIsProductsOpen] = useState(false);
               </div>
             </li> */}
           
-            {/* <li>
+            <li>
               <div className="group">
                 <button
                   onClick={toggleBanner }
@@ -204,10 +204,20 @@ const [isProductsOpen, setIsProductsOpen] = useState(false);
                       </button>
                     </li>
                  
+                    <li>
+                      <button
+                       onClick={() => navigate("/addbannerpost/:id")}
+                        className="block p-2 rounded-lg hover:bg-gray-600 text-white"
+                      >
+                       Add Banner Post
+                      </button>
+                    </li>
+
+
                   </ul>
                 )}
               </div>
-            </li> */}
+            </li>
             <li>
               <div className="group">
                 <button
@@ -511,7 +521,7 @@ const [isProductsOpen, setIsProductsOpen] = useState(false);
                 className="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-700 transition font-900"
               >
                 <i className="bi bi-app-indicator text-md"></i>
-                <span> Offer Notification</span>
+                <span>Offer Notification</span>
               </button>
             </li>
             <li>
