@@ -13,7 +13,7 @@ import * as XLSX from 'xlsx';
 
 
 const AllProducts = () => {
-  const [rows, setRows] = useState(5);
+  const [rows, setRows] = useState(20);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [adminId, setAdminId] = useState(null);
