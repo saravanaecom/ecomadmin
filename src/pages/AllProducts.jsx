@@ -15,6 +15,7 @@ import * as XLSX from 'xlsx';
 const AllProducts = () => {
   const [rows, setRows] = useState(20);
   const [currentPage, setCurrentPage] = useState(1);
+  const [inputPage, setInputPage] = useState("");
   const [totalPages, setTotalPages] = useState(1);
   const [adminId, setAdminId] = useState(null);
   const [products, setProducts] = useState([]);
@@ -258,11 +259,28 @@ console.log("Products Data:", jsonFormattedData);
   // Pagination
   const paginatedProducts = filteredProducts.slice((currentPage - 1) * rows, currentPage * rows);
 
-  const handlePageChange = (direction) => {
-    if (direction === "prev" && currentPage > 1) {
+  const handlePageChange = (page) => {
+    if (typeof page === "number") {
+      // Direct jump to a page
+      if (page >= 1 && page <= totalPages) {
+        setCurrentPage(page);
+      }
+    } else if (page === "prev" && currentPage > 1) {
       setCurrentPage((prev) => prev - 1);
-    } else if (direction === "next" && currentPage < totalPages) {
+    } else if (page === "next" && currentPage < totalPages) {
       setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    setInputPage(e.target.value);
+  };
+
+  const handleJumpToPage = () => {
+    const page = Number(inputPage);
+    if (!isNaN(page) && page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+      setInputPage(""); // Clear input after jump
     }
   };
 
@@ -520,6 +538,7 @@ console.log("Products Data:", jsonFormattedData);
 
     {/* Pagination */}
     <div className="flex items-center space-x-4">
+      {/* Previous Button */}
       <button
         onClick={() => handlePageChange("prev")}
         disabled={currentPage === 1}
@@ -531,9 +550,13 @@ console.log("Products Data:", jsonFormattedData);
       >
         Previous
       </button>
+
+      {/* Page Display */}
       <span className="text-gray-700">
         Page {currentPage} of {totalPages}
       </span>
+
+      {/* Next Button */}
       <button
         onClick={() => handlePageChange("next")}
         disabled={currentPage === totalPages}
@@ -544,6 +567,23 @@ console.log("Products Data:", jsonFormattedData);
         }`}
       >
         Next
+      </button>
+
+      {/* Direct Page Input */}
+      <input
+        type="number"
+        value={inputPage}
+        onChange={handleInputChange}
+        placeholder="Go to page..."
+        min="1"
+        max={totalPages}
+        className="w-20 px-2 py-1 border rounded-lg text-center"
+      />
+      <button
+        onClick={handleJumpToPage}
+        className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-all"
+      >
+        Go
       </button>
     </div>
   </div>
