@@ -679,7 +679,7 @@ console.log(SubItemsList)
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-gray-700">Aproximiate develiry date <span className="text-red-500">*</span></label>
+                      <label className="block text-sm font-medium text-gray-700"> Approximate delivery date <span className="text-red-500">*</span></label>
                       <input
                         type="text"
                         className="mt-1 block w-full px-4 py-2 rounded-md border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
