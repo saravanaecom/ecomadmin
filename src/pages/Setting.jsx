@@ -29,6 +29,8 @@ const Setting = () => {
     lightblackcolorCode: "",
     colorCode: "",
     Firebasetext: "",
+    WhatsAppUrl: "",
+    OwnerMobileNo:"",
   });
   const navigate = useNavigate();
 
@@ -60,7 +62,7 @@ const Setting = () => {
       if (data) {
         setFormData({
           ...formData,
-          Id: data.Id, // Set the Id from the fetched data
+          Id: data.Id, 
           btnSubCategory: data.SubCategoryStatus === 1,
           btnRazorpay: data.PaymentId ? true : false,
           txtPaymentId: data.PaymentId || "",
@@ -71,6 +73,7 @@ const Setting = () => {
           shadowcolorCode: data.shadowcolorCode || "",
           whitecolorCode: data.whitecolorCode || "",
           Firebasetext: data.FireBaseId || "",
+          WhatsAppUrl: data.WhatsAppUrl || "",
         });
         localStorage.setItem("AdminSetting", JSON.stringify(data)); 
       } else {
@@ -107,10 +110,14 @@ const Setting = () => {
       whitecolorCode: formData.whitecolorCode,
       lightblackcolorCode: formData.lightblackcolorCode,
       colorCode: formData.colorCode,
+      WhatsAppUrl:formData.WhatsAppUrl,
+      OwnerMobileNo:formData.OwnerMobileNo,
+      
     };
-
+    console.log(objlist)
     try {
       const success = await updatesetting(objlist);
+   
       if (success) {
         setSuccessMessage("Setting updated successfully!");
         setIsSuccessVisible(true);
@@ -210,6 +217,46 @@ const Setting = () => {
                   onChange={handleInputChange}
                 />
               </div>
+                
+
+
+              <div>
+                <label
+                  htmlFor="WhatsAppUrl"
+                  className="block text-base font-semibold mb-2"
+                >
+           What's App Url
+                </label>
+                <input
+                  type="text"
+                  id="WhatsAppUrl"
+                  className="w-full border-2 border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value={formData.WhatsAppUrl}
+                  onChange={handleInputChange}
+                />
+              </div>
+                
+
+
+              <div>
+                <label
+                  htmlFor="OwnerMobileNo"
+                  className="block text-base font-semibold mb-2"
+                >
+                 OwnerMobileNumber
+                </label>
+                <input
+                  type="text"
+                  id="OwnerMobileNo"
+                  className="w-full border-2 border-gray-300 p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  value={formData.OwnerMobileNo}
+                  onChange={handleInputChange}
+                />
+              </div>
+
+
+
+
 
               <div>
               <button
