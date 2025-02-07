@@ -241,6 +241,21 @@ console.log("Products Data:", jsonFormattedData);
     setCurrentPage(1);
   }, [products, categoryid, selectedCategory, searchKey, rows]);
 
+    
+
+  useEffect(() => {
+    const savedPage = localStorage.getItem("lastVisitedPage");
+    if (savedPage) {
+      setCurrentPage(Number(savedPage)); 
+      localStorage.removeItem("lastVisitedPage"); 
+    }
+  }, []);
+  
+
+  const handleBack = () => {
+    navigate(-1); // Go back to the previous page
+  };
+  
 
   // Filter products based on search
   // useEffect(() => {
@@ -292,6 +307,7 @@ console.log("Products Data:", jsonFormattedData);
   };
 
   const handleNavigate = (id) => {
+    localStorage.setItem("lastVisitedPage", currentPage); 
     navigate(`/AddProducts/${id}`);
   };
 
@@ -426,11 +442,12 @@ console.log("Products Data:", jsonFormattedData);
                         {product.ProductCode}
                       </td>
                       <td className="px-6 py-4 text-sm font-medium text-gray-700">
-                        <img
-                          src={ImagePathRoutes.ProductImagePath + product.Img0}
-                          alt={product.Description}
+                      <img
+                       src={ImagePathRoutes.ProductImagePath + product.Img0}
+                         alt={product.Description}
                           className="w-16 h-16 object-cover rounded-lg"
-                        />
+                            onError={(e) => e.target.src = "https://t3.ftcdn.net/jpg/05/11/01/02/360_F_511010254_pVaBHjs5DooDMPkCPrC4Pw2C39cfhyOa.jpg"}
+/>
                       </td>
                       <td className="px-6 py-4 text-sm font-medium text-gray-700">
                         {product.Description}
