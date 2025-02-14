@@ -2,7 +2,7 @@ import Slider from "../components/sidebar";
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetcDeliveryTime, deleteDeliveryTime } from "../services/DeliveryTime";
-import { updatesaleorder } from '../services/Order';
+import { updatesaleorder,API_FetchSelectSettingsNew } from '../services/Order';
 
 const OrderEdit = () => {
   const { id } = useParams();
@@ -17,7 +17,7 @@ const OrderEdit = () => {
   const [selectedDeliveryTime, setSelectedDeliveryTime] = useState("");
   const [status, setStatus] = useState("0");
   const [deliverydate, setDeliverydate] = useState("");
-
+  const [whatsapdata, setwhatsapdata] = useState([]);   
   const handleStatusChange = (e) => {
     setStatus(e.target.value);
   };
@@ -38,6 +38,8 @@ const OrderEdit = () => {
       const selectedOrder = orderData.find((order) => order.Id === parseInt(id, 10));
       if (selectedOrder) {
         setOrderDetails(selectedOrder);
+
+        console.log(selectedOrder);
       } else {
         navigate("/Admin/OrderPanel");
       }
@@ -52,6 +54,37 @@ const OrderEdit = () => {
     }
   }, [adminId]);
 
+
+  const FetchSelectSettingsNew = async () => {
+    try {
+        const list = await API_FetchSelectSettingsNew(adminId);
+  
+
+        if (Array.isArray(list) && list.length > 0) {
+            setwhatsapdata(list); 
+    
+        } else {
+            console.error("Fetched data is not a valid array or is empty.");
+            setwhatsapdata([]); 
+        }
+    } catch (error) {
+        setwhatsapdata([]);
+        console.error("Error fetching categories:", error);
+    }
+};
+
+
+useEffect(() => {
+  const interval = setInterval(() => {
+      FetchSelectSettingsNew();
+  }, 3000); 
+
+  return () => clearInterval(interval); 
+}, []);
+
+
+
+
   const fetchDeliveryTimeData = async () => {
     try {
       const data = await fetcDeliveryTime(adminId);
@@ -62,11 +95,20 @@ const OrderEdit = () => {
     }
   };
 
+
+
+   
+
+
+
+
+
   const handleSave = async () => {
     setLoading(true);
     const Pid = parseInt(id);
     const DD1 = selectedDeliveryTime;
     const DD = deliverydate;
+    const userMobileNo = orderDetails?.MobileNo || "";
     const objlist = {
       temp: status,
       deliveryTime: selectedDeliveryTime,
@@ -74,14 +116,21 @@ const OrderEdit = () => {
     };
 
     try {
-      const success = await updatesaleorder(adminId, Pid, status, DD, DD1);
+      if (whatsapdata.length > 0){
+        const { WhatsAppUrl, OwnerMobileNo } = whatsapdata[0]; 
+
+      const success = await updatesaleorder(adminId, Pid, status, DD, DD1, WhatsAppUrl, OwnerMobileNo,userMobileNo);
       if (success) {
         alert("Order updated successfully!");
         navigate(`/Order`);
       } else {
         setErrorMessage("Failed to update the order.");
       }
-    } catch (error) {
+
+
+    } 
+  
+  } catch (error) {
       console.error("Error during order update:", error);
       setErrorMessage("An error occurred while updating the order.");
     } finally {
