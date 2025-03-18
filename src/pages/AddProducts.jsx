@@ -411,7 +411,7 @@ console.log(SubItemsList)
             IsStock:inStock? 1 : 0,
             OfferProduct: offerProduct? 1 : 0,
             FeatureProduct: featureProduct? 1 : 0,
-            FreshProduct: 0,
+            FreshProduct: featureProduct? 1 : 0,
             NewProduct: newProduct? 1 : 0,
             MultiplePriceEnbled: multiplePrice ? 1 : 0,
             ProductWeightType:[],
