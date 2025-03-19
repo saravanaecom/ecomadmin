@@ -47,6 +47,14 @@ const AddCoupon = () => {
         setMobileNo(MobileNo);
         setIsActive(isActive);
         setExpiresAt(formattedDate);
+
+
+
+        if (Coupon.coupondiscount !== null) {
+          setDiscountValue(Coupon.coupondiscount);
+        } else if (Coupon.discountValue) {
+          setDiscountValue(Coupon.discountValue);
+        }
       }
     }
   }, [id]);
