@@ -16,6 +16,8 @@ const [isProductsOpen, setIsProductsOpen] = useState(false);
   const [isCouponOpen, setIsCouponOpen] = useState(false);
   const [isBrandOpen, setIsBrandOpen] = useState(false);
   const [isDeliveryAreaOpen, setIsDeliveryAreaOpen] = useState(false);
+ const [isDeliverychargeopen,setIsDeliverychargeopen] =useState(false);
+  const [IsDriver, setIsDriver] = useState(false);
   const navigate = useNavigate();
 
   const toggleSidebar = () => {
@@ -53,6 +55,16 @@ const [isProductsOpen, setIsProductsOpen] = useState(false);
 
   const toggledeliveryArea = () => {
     setIsDeliveryAreaOpen(!isDeliveryAreaOpen);
+  };
+
+
+  const toggledeliverycharge = () => {
+    setIsDeliverychargeopen(!isDeliverychargeopen);
+  };
+
+
+  const toggledriver = () => {
+    setIsDriver(!IsDriver);
   };
 
 
@@ -301,14 +313,14 @@ const [isProductsOpen, setIsProductsOpen] = useState(false);
                         Add SubCategory
                       </button>
                     </li>
-                    {/* <li>
+                    <li>
                       <button
                       onClick={() => navigate("/SubCategoryReorder")}
                         className="block p-2 rounded-lg hover:bg-gray-600 text-white"
                       >
                         SubCategory Recorder
                       </button>
-                    </li> */}
+                    </li>
                   </ul>
                 )}
               </div>
@@ -392,7 +404,88 @@ const [isProductsOpen, setIsProductsOpen] = useState(false);
               </div>
             </li>
 
-    
+             
+            <li>
+              <div className="group">
+                <button
+                  onClick={toggledriver }
+                  className="flex items-center justify-between w-full p-3 rounded-lg hover:bg-gray-700 transition focus:outline-none"
+                 
+                >
+                  <span className="flex items-center gap-3 text-md font-900 text-white">
+                    <i className="bi bi-briefcase text-md"></i>
+                    <span>DriverMaster</span>
+                  </span>
+                  <i
+                    className={`bi bi-chevron-down transition-transform ${
+                      IsDriver ? 'rotate-180' : ''
+                    }`}
+                  ></i>
+                </button>
+                {IsDriver && (
+                  <ul className="ml-6 mt-2 space-y-2">
+                    <li>
+                      <button
+                       onClick={() => navigate("/AllDriver")}
+                        className="block p-2 rounded-lg hover:bg-gray-600 text-white"
+                      >
+                        All Driver
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                     onClick={() => navigate("/AddDriver/:id")}
+                        className="block p-2 rounded-lg hover:bg-gray-600 text-white"
+                      >
+                        Add Driver
+                      </button>
+                    </li>
+                  </ul>
+                )}
+              </div>
+            </li>
+           
+
+            <li>
+              <div className="group">
+                <button
+                  onClick={toggledeliverycharge }
+                  className="flex items-center justify-between w-full p-3 rounded-lg hover:bg-gray-700 transition focus:outline-none"
+                 
+                >
+                  <span className="flex items-center gap-3 text-md font-900 text-white">
+                    <i className="bi bi-briefcase text-md"></i>
+                    <span>DeliveryCharge</span>
+                  </span>
+                  <i
+                    className={`bi bi-chevron-down transition-transform ${
+                      isDeliverychargeopen ? 'rotate-180' : ''
+                    }`}
+                  ></i>
+                </button>
+                {isDeliverychargeopen && (
+                  <ul className="ml-6 mt-2 space-y-2">
+                    <li>
+                      <button
+                       onClick={() => navigate("/DeliveryCharge")}
+                        className="block p-2 rounded-lg hover:bg-gray-600 text-white"
+                      >
+                        All Delivery Charge
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                     onClick={() => navigate("/AddDeliveryCharge/:id")}
+                        className="block p-2 rounded-lg hover:bg-gray-600 text-white"
+                      >
+                        Add Delivery Charge
+                      </button>
+                    </li>
+                  </ul>
+                )}
+              </div>
+            </li>
+
 
 
             <li>
