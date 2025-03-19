@@ -197,6 +197,7 @@ export const fetchProductIdAdmin = async (adminId,Id) => {
 
 export const insertProduct = async (objlist) => {
   try {
+    console.log(JSON.stringify(objlist));
     const response = await fetch(`${APIRoutes.APP_INSERTPRODUCT}`, {
       method: "POST",
       headers: {
@@ -204,7 +205,9 @@ export const insertProduct = async (objlist) => {
         objData:""
       },
       body: JSON.stringify(objlist),
+   
     });
+   
     console.log(response)
     if (response.ok) {
       return true;

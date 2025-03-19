@@ -51,6 +51,7 @@ export const deleteCategory = async (Id) => {
 
 
   export const UpdateReorder = async (objlist) => {
+    console.log(JSON.stringify(objlist));
     try {
       const response = await fetch(`${APIRoutes.APP_UPDATEREORDER}`, {
         method: "POST",

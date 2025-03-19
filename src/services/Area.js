@@ -25,6 +25,7 @@ export const fetcArea = async (adminId) => {
       throw error;
     }
   };
+  
   export const deleteArea = async (Id) => {
     try {
       let objlist = { Id: Id };

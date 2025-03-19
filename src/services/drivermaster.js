@@ -1,15 +1,41 @@
 import APIRoutes from '../routes/APIRoutes';
 
-export const fetchSelectCoustomer = async (adminId) => {
+export const insertdriver = async (objlist) => {
+    try {
+      const response = await fetch(`${APIRoutes.APP_INSERTDRIVER}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          objData:""
+        },
+        body: JSON.stringify(objlist),
+      });
+  
+      if (response.ok) {
+        return true;
+      } else {
+        console.error("API response error:", response.status, response.statusText);
+        return false;
+    }
+    } catch (error) {
+      console.error("Error saving area:", error);
+      return false;
+    }
+  };
+
+
+
+  export const fetchSelectdriver = async (adminId) => {
     let objlist = {
         Comid: adminId, 
       };
     try {
-        const response = await fetch(`${APIRoutes.APP_SELECTCUSTOMER}`, {
+        const response = await fetch(`${APIRoutes.APP_SELECTDRIVER}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json; charset=utf-8',
-                    },
+               
+            },
             body: JSON.stringify(objlist)
         });
         if (!response.ok) {
@@ -27,28 +53,27 @@ export const fetchSelectCoustomer = async (adminId) => {
 };
 
 
-export const UpdateCustomer = async (Id) => {
+export const DeleteDriver = async (Id) => {
     try {
-      let objlist = { Id: Id
-      
-       };
-      const response = await fetch(`${APIRoutes.APP_UPDATECUSTOMER}`, {
+      let objlist = { Id: Id };
+      console.log(objlist)
+      const response = await fetch(`${APIRoutes.APP_DELETEDRIVER}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          objData : ""
         },
         body: JSON.stringify(objlist),
       });
-  
+      console.log(response)
       if (response.ok) {
        
         return true;
       } else {
         return false;
-    }
+      }
     } catch (error) {
       console.error("Error deleting area:", error);
       return false;
     }
   };
-

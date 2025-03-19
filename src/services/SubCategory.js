@@ -34,8 +34,7 @@ export const fetchSelectCategory = async (adminId) => {
         const response = await fetch(`${APIRoutes.APP_APP_SELECTCATEGORY}`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json; charset=utf-8',
-               
+                'Content-Type': 'application/json; charset=utf-8',  
             },
             body: JSON.stringify(objlist)
         });
@@ -77,7 +76,9 @@ export const deleteSubCategory = async (Id) => {
   };
   
   export const insertsubCategory = async (objlist) => {
+    console.log(JSON.stringify(objlist));
     try {
+      
       const response = await fetch(`${APIRoutes.APP_INSERTSUBCATEGORY}`, {
         method: "POST",
         headers: {
@@ -100,9 +101,10 @@ export const deleteSubCategory = async (Id) => {
   };
 
 
-  export const UpdateReorder = async (objlist) => {
+  export const UpdateSubCategoryReorder = async (objlist) => {
     try {
-      const response = await fetch(`${APIRoutes.APP_UPDATEREORDER}`, {
+      console.log(JSON.stringify(objlist));
+      const response = await fetch(`${APIRoutes.APP_UPDATESUBCATEGORYORDER}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -121,4 +123,33 @@ export const deleteSubCategory = async (Id) => {
       return false;
     }
   };
+
+  export const fetchSelectsubCategoryid = async (adminId,CategoryId) => {
+    let objlist = {
+        Comid: adminId, 
+      };
+    try {
+      console.log(CategoryId)
+        const response = await fetch(`${APIRoutes.APP_SELECTSUBCATEGORYID}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+                 Cid: CategoryId
+            },
+            body: JSON.stringify(objlist)
+        });
+        console.log(response)
+        if (!response.ok) {
+            throw new Error('Network response was not ok.');
+        }
+        const data = await response.json();
+        if (!data || !Array.isArray(data)) {
+            throw new Error('No data found.');
+        }
+        return data;
+    } catch (error) {
+        console.error('Failed to fetch details:', error);
+        throw error; // Re-throw so the calling function can handle it
+    }
+};
   
