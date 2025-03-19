@@ -453,6 +453,7 @@ console.log(SubItemsList)
     const file = e.target.files[0];
     if (file) {
       formData.append("MyImages", file);
+      console.log(formData);
       setLoading(true);
       try {
         const response = await fetch(`${ServerURL.PRODUCTION_HOST_URL}/api/ItemMasterEcomApp/UploadFile`, {
@@ -542,7 +543,7 @@ console.log(SubItemsList)
               <div className="card-header mb-4">
                 <h5 className="text-xl font-semibold text-gray-800">Add Product</h5>
               </div>
-
+y
               <form onSubmit={handleSave} className="space-y-6">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   <div className="space-y-4">
@@ -580,7 +581,7 @@ console.log(SubItemsList)
 
                     {/* Category */}
                     <div>
-      <div>
+         <div>
         <label className="block text-sm font-medium text-gray-700">
           Select Category
         </label>
@@ -631,24 +632,24 @@ console.log(SubItemsList)
 
                    <div>
                    <div>
-  <label className="block text-sm font-medium text-gray-700">
+                    <label className="block text-sm font-medium text-gray-700">
     Select Brand
-  </label>
-  <select
-    className="mt-1 block w-full px-4 py-2 rounded-md border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
-    value={selectedBrand}
+                    </label>
+                    <select
+                     className="mt-1 block w-full px-4 py-2 rounded-md border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500"
+                     value={selectedBrand}
 
-    onChange={(e) => setSelectedBrand(e.target.value)}
-  >
-    {console.log(selectedBrand)}
-    <option value="">Select Brand</option>
-    {Brand.map((item) => (
-      <option key={item.Id} value={item.Brandname}>
-        {item.BrandName}
-      </option>
-    ))}
-  </select>
-</div>
+                      onChange={(e) => setSelectedBrand(e.target.value)}
+                        >
+                       {console.log(selectedBrand)}
+                       <option value="">Select Brand</option>
+                        {Brand.map((item) => (
+                        <option key={item.Id} value={item.Brandname}>
+                       {item.BrandName}
+                       </option>
+                      ))}
+                      </select>
+                     </div>
 
 
 

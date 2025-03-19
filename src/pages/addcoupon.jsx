@@ -19,10 +19,14 @@ const AddCoupon = () => {
   const [adminId, setAdminId] = useState(null);
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState(""); 
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [discountValue, setDiscountValue] = useState('');
+  const isPercentage = discountValue.includes('%');
+  const [checked, setChecked] = useState(false);
+  const [multiplechecked, setMultipleChecked] = useState(false);
 
   useEffect(() => {
     const Couponlists = JSON.parse(localStorage.getItem("CouponDataList"));
@@ -52,12 +56,10 @@ const AddCoupon = () => {
   const closeSuccessModal = () => {  
     setIsSuccessModalOpen(false);
   };
-
-
   const closeModal = () => {
     setIsErrorModalOpen(false);
   };
-  // ✅ Fetch Admin ID from Local Storage
+  
   useEffect(() => {
     const adminUserId = JSON.parse(localStorage.getItem("adminuserid"));
     if (!adminUserId) {
@@ -131,6 +133,10 @@ const AddCoupon = () => {
       MobileNo: MobileNo,
       isActive: isActive ? 1 : 0,
       expiresAt: expiresAt,
+      discountValue: isPercentage ? null : discountValue, 
+      coupondiscount: isPercentage ? discountValue : null,
+      isMultipleTimesOffer:multiplechecked ? 1 : 0,
+      isMobileNumOffer:checked? 1 : 0
     };
   
     console.log(objlist);
@@ -157,6 +163,17 @@ const AddCoupon = () => {
       setLoading(false);
     }
   };
+
+
+  const handleCheckboxChange = () => {
+    setChecked(!checked);
+  };
+  const handlemultimeCheckboxChange=()=>{
+
+    setMultipleChecked(!multiplechecked);
+    
+  };
+
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -199,7 +216,7 @@ const AddCoupon = () => {
                   placeholder="Enter Customer number"
                   value={MobileNo}
                   onChange={handleMobileChange}
-                  required
+               
                   className="w-full p-2 border rounded-md"
                 />
                 {suggestions.length > 0 && (
@@ -216,6 +233,24 @@ const AddCoupon = () => {
                   </ul>
                 )}
               </div>
+              
+              <div className="flex items-center space-x-2">
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={handleCheckboxChange}
+        className="w-6 h-6 border-2 border-gray-300 rounded-md checked:bg-blue-500 checked:border-transparent focus:ring-2 focus:ring-blue-300"
+      />
+      <span className="text-lg">apply only mobilenumber</span>
+    </div>
+
+
+
+
+
+
+
+
 
               {/* Customer Name */}
               <div>
@@ -241,16 +276,45 @@ const AddCoupon = () => {
                 />
               </div>
 
-              {/* Active Checkbox */}
-              <div className="flex items-center gap-2">
+              <div>
+                <label className="block text-gray-700 font-medium mb-1">Discount Amount or %</label>
                 <input
-                  type="checkbox"
-                  checked={isActive}
-                  onChange={(e) => setIsActive(e.target.checked)}
-                  className="w-5 h-5"
+                  type="text"
+                  value={discountValue}
+                  onChange={(e) => setDiscountValue(e.target.value.replace(/\s/g, ''))}
+                  placeholder="Enter discount (e.g., 10 or 10%)"
+                  className="w-full p-2 border rounded-md"
                 />
-                <label className="text-gray-700">Active</label>
               </div>
+
+            
+              {/* Active Checkbox */}
+              <div className="flex items-center space-x-4">
+  {/* First Checkbox */}
+  <div className="flex items-center gap-2">
+    <input
+      type="checkbox"
+      checked={isActive}
+      onChange={(e) => setIsActive(e.target.checked)}
+      className="w-5 h-5"
+    />
+    <label className="text-gray-700">Active</label>
+  </div>
+
+  {/* Second Checkbox */}
+  <div className="flex items-center space-x-2">
+    <input
+      type="checkbox"
+      checked={multiplechecked}
+      onChange={handlemultimeCheckboxChange}
+      className="w-6 h-6 border-2 border-gray-300 rounded-md checked:bg-blue-500 checked:border-transparent focus:ring-2 focus:ring-blue-300"
+    />
+    <span className="text-lg">Multiple times</span>
+  </div>
+</div>
+
+
+          
 
               {/* Submit Button */}
               <div>

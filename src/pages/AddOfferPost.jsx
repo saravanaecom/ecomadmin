@@ -24,6 +24,9 @@ const AddOfferPost = () => {
     OfferName: "",
   });
 
+
+  const [istopoffer, setIsTopoffer] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -119,6 +122,7 @@ const AddOfferPost = () => {
       OfferPostImagePath: "",
       SubCatPostImagePath: "",
       OfferSubDescription: formData.OfferName,
+      istopoffer:istopoffer ? 1 : 0,
     };
 
     try {
@@ -222,7 +226,12 @@ const AddOfferPost = () => {
                     className="w-44 h-36 rounded-lg mt-2"
                   />
                 </div>
+            
 
+                <div className="flex items-center">
+              <input type="checkbox" checked={istopoffer} onChange={() => setIsTopoffer(!istopoffer)} className="mr-2" />
+              <label className="text-gray-700">Is Top Offer</label>
+            </div>
                 {/* Save Button */}
                 <div className="mt-6 flex justify-end">
                   <button

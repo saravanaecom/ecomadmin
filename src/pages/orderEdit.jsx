@@ -75,12 +75,10 @@ const OrderEdit = () => {
 
 
 useEffect(() => {
-  const interval = setInterval(() => {
-      FetchSelectSettingsNew();
-  }, 3000); 
-
-  return () => clearInterval(interval); 
+  // Call FetchSelectSettingsNew() just once when the component mounts
+  FetchSelectSettingsNew();
 }, []);
+
 
 
 
@@ -104,12 +102,15 @@ useEffect(() => {
 
 
   const handleSave = async () => {
+
+    await FetchSelectSettingsNew();
+    
     setLoading(true);
     const Pid = parseInt(id);
     const DD1 = selectedDeliveryTime;
     const DD = deliverydate;
     const userMobileNo = orderDetails?.MobileNo || "";
-    const objlist = {
+     const objlist = {
       temp: status,
       deliveryTime: selectedDeliveryTime,
       deliverydate: deliverydate,

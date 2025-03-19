@@ -17,8 +17,10 @@ const Customer = () => {
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentCustomer, setCurrentCustomer] = useState(null);
+  const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [searchTerm, setSearchTerm] = useState(""); 
-
+  const [checkedCustomers, setCheckedCustomers] = useState({});
+   
   const statuses = ["All", "Pending", "Cancel", "Accepted", "Delivered"];
 
   const companyId = localStorage.getItem("adminuserid");
@@ -36,12 +38,10 @@ const Customer = () => {
     setError(null);
     try {
       const data = await fetchSelectCoustomer(Number(companyId));
+      localStorage.setItem("Customerdata", JSON.stringify(data));
       if (data && Array.isArray(data)) {
         setCustomers(data);
-
-        if (data.length > 0) {
-          setIsChecked(data[0].GSTNo === '1');
-        }
+       
       } else {
         throw new Error("Unexpected API response");
       }
@@ -51,7 +51,14 @@ const Customer = () => {
       setLoading(false);
     }
   };
+  
 
+  const handleCheckboxChange = (customerId) => {
+    setCheckedCustomers(prev => ({
+      ...prev,
+      [customerId]: !prev[customerId]
+    }));
+  };
 
   const handleUpdate = async (id) => {
     const confirmDelete = window.confirm("Are you sure you want to Update this coupon?");
@@ -72,16 +79,16 @@ const Customer = () => {
   };
 
 
+   
 
 
 
 
 
 
-
-  const handleCheckboxChange = () => {
-    setIsChecked(!isChecked);
-  };
+  // const handleCheckboxChange = () => {
+  //   setIsChecked(!isChecked);
+  // };
 
   useEffect(() => {
     fetchCustomers();
@@ -277,20 +284,20 @@ const Customer = () => {
 
   {/* Checkbox Section */}
   <div className="mt-6 flex items-center">
-              <input
-                type="checkbox"
-                id="checkboxOption"
-                checked={isChecked}
-                onChange={handleCheckboxChange}
-                className="mr-2 w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-              />
-              <label
-                htmlFor="checkboxOption"
-                className="text-sm font-medium text-gray-700"
-              >
-               B2B Coustomer
-              </label>
-            </div>
+                  <input
+                    type="checkbox"
+                    id={`checkbox-${currentCustomer.Id}`}
+                    checked={checkedCustomers[currentCustomer.Id] || false}
+                    onChange={() => handleCheckboxChange(currentCustomer.Id)}
+                    className="mr-2 w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  />
+                  <label
+                    htmlFor={`checkbox-${currentCustomer.Id}`}
+                    className="text-sm font-medium text-gray-700"
+                  >
+                    B2B Customer
+                  </label>
+                </div>
 
 
 

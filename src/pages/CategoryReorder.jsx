@@ -6,6 +6,7 @@ import Sidebar from "../components/sidebar";
 const CategoryReorder = () => {
   const [categories, setCategories] = useState([]);
   const [adminId, setAdminId] = useState(null);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -61,6 +62,7 @@ const CategoryReorder = () => {
 
     try {
       const success = await UpdateReorder(reorderedData);
+      
       if (success) {
         alert("Reorder saved successfully!");
         navigate("/CategoryReorder");
@@ -74,7 +76,7 @@ const CategoryReorder = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex ">
       {/* Sidebar */}
       <Sidebar />
 
@@ -87,7 +89,7 @@ const CategoryReorder = () => {
             </div>
           </div>
 
-          <div className="bg-gray-50 p-4 rounded-lg shadow-md">
+          <div className="bg-gray-50  shadow-md  max-h-full overflow-y-auto p-2 border rounded-lg">
             <label className="block mb-4 text-sm font-medium text-gray-700">
               Drag and Reorder Categories
             </label>

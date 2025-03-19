@@ -5,6 +5,8 @@ import { fetcOfferpost , deleteOfferPost} from "../services/offerpost";
 import { ImagePathRoutes } from '../routes/imagePathRoutes';
 import { MdDelete } from "react-icons/md";
 import { GrEdit } from "react-icons/gr";
+import SuccessModal from "../components/sucessmodel";
+import ErrorModal from "../components/error";
 import '../index.css'
 
 const OfferPostPanel = () => {
@@ -15,6 +17,10 @@ const OfferPostPanel = () => {
   const [error, setError] = useState(null);
   const [adminId, setAdminId] = useState(null);
   const [areaData, setAreaData] = useState([]);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -74,8 +80,10 @@ const OfferPostPanel = () => {
     try {
       const isDeleted = await deleteOfferPost(id);
       if (isDeleted) {
-        setAreaData((prevAreaData) => prevAreaData.filter((area) => area.Id !== id));
-      
+         setOffers((prevOffers) => prevOffers.filter((offer) => offer.Id !== id));
+         setAreaData((prevAreaData) => prevAreaData.filter((area) => area.Id !== id));
+         setSuccessMessage("product deleted successfully!");
+         setIsSuccessModalOpen(true);
       } else {
         setError("Failed to delete the area. Please try again.");
       }
@@ -83,6 +91,17 @@ const OfferPostPanel = () => {
       setError("Error deleting the area: " + error.message);
     }
   };
+
+ 
+
+  const closeModal = () => {
+    setIsErrorModalOpen(false);
+  };
+
+  const closeSuccessModal = () => {  
+    setIsSuccessModalOpen(false);
+  };
+
  
   const startIndex = (currentPage - 1) * numRows;
   const paginatedOffers = offers.slice(startIndex, startIndex + numRows);
@@ -220,6 +239,8 @@ const OfferPostPanel = () => {
           </div>
         </div>
       </div>
+      {isSuccessModalOpen && <SuccessModal message={successMessage} onClose={closeSuccessModal} />}
+      {isErrorModalOpen && <ErrorModal message={errorMessage} onClose={closeModal} />}
     </div>
   );
 };

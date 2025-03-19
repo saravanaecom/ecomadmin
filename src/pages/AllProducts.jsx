@@ -13,7 +13,7 @@ import * as XLSX from 'xlsx';
 
 
 const AllProducts = () => {
-  const [rows, setRows] = useState(20);
+  const [rows, setRows] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
   const [inputPage, setInputPage] = useState("");
   const [totalPages, setTotalPages] = useState(1);
@@ -120,9 +120,9 @@ const AllProducts = () => {
         });
 
         const jsonFormattedData = JSON.stringify(productsToSave, null, 2); // Pretty format with indentation
-console.log("Products Data:", jsonFormattedData);
+
     
-        // Insert products
+      
         const success = await insertProduct(productsToSave);
     
         if (success) {
@@ -220,7 +220,7 @@ console.log("Products Data:", jsonFormattedData);
     const catfiltered = products.filter((product) => {
       if (categoryid && selectedCategory) {
         return product.CId === parseInt(categoryid) && product.SId === parseInt(selectedCategory);
-      } else if (categoryid) {
+       } else if (categoryid) {
         return product.CId === parseInt(categoryid);
       } else if (selectedCategory) {
         return product.SId === parseInt(selectedCategory);
@@ -244,12 +244,37 @@ console.log("Products Data:", jsonFormattedData);
     
 
   useEffect(() => {
-    const savedPage = localStorage.getItem("lastVisitedPage");
-    if (savedPage) {
-      setCurrentPage(Number(savedPage)); 
-      localStorage.removeItem("lastVisitedPage"); 
+    // Retrieve saved filters
+    const savedCategoryId = localStorage.getItem("savedCategoryId");
+    const savedSelectedCategory = localStorage.getItem("savedSelectedCategory");
+    const savedSearchKey = localStorage.getItem("savedSearchKey");
+  
+    if (savedCategoryId) {
+      setCategoryid(savedCategoryId);
+      localStorage.removeItem("savedCategoryId"); 
     }
-  }, []);
+  
+    if (savedSelectedCategory) {
+      setSelectedCategory(savedSelectedCategory);
+      localStorage.removeItem("savedSelectedCategory"); 
+    }
+  
+    if (savedSearchKey) {
+      setSearchKey(savedSearchKey);
+      localStorage.removeItem("savedSearchKey"); 
+    }
+  
+    // Retrieve last visited page
+    const savedPage = localStorage.getItem("lastVisitedPage");
+    const page = Number(savedPage);
+  
+    if (!isNaN(page) && page >= 1 && page <= totalPages) {
+      setCurrentPage(page);
+      localStorage.removeItem("lastVisitedPage");
+    }
+  }, [totalPages]);
+  
+  
   
 
   const handleBack = () => {
@@ -308,6 +333,9 @@ console.log("Products Data:", jsonFormattedData);
 
   const handleNavigate = (id) => {
     localStorage.setItem("lastVisitedPage", currentPage); 
+    localStorage.setItem("savedCategoryId", categoryid || ""); 
+    localStorage.setItem("savedSelectedCategory", selectedCategory || ""); 
+    localStorage.setItem("savedSearchKey", searchKey || "");
     navigate(`/AddProducts/${id}`);
   };
 

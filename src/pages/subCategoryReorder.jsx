@@ -2,14 +2,18 @@ import React, { useState, useEffect } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { useNavigate } from "react-router-dom";
 import Slider from "../components/sidebar";
+import {fetchSelectCategory,fetchSelectsubCategoryid,UpdateSubCategoryReorder } from "../services/SubCategory";
 import ServerURL from "../server/serverUrl";
+
 
 const SubCategoryReorder = () => {
   const [subCategories, setSubCategories] = useState([]);
+  const [categoryid, setCategoryid] = useState('');
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
   const [adminId, setAdminId] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,100 +28,86 @@ const SubCategoryReorder = () => {
     setAdminId(Number(adminUserId));
   }, [navigate]);
 
+
+  useEffect(() => {
+    if (categoryid) {
+      fetchsubcategoryid();
+    }
+  }, [categoryid]);
+  const fetchsubcategoryid = async () => {
+    setLoading(true);
+    try {
+      const data = await fetchSelectsubCategoryid(adminId, categoryid);
+      if (data) {
+        setSubCategories(data);
+      }
+    } catch (error) {
+     setError("Error fetching Subcategories.");
+    } finally {
+      setLoading(false);
+    }
+  }; 
+
+
+
   useEffect(() => {
     const fetchCategories = async () => {
-      if (adminId) {
-        try {
-          const categoryResponse = await fetch(
-            `${ServerURL.PRODUCTION_HOST_URL}/api/CategoryApp/SelectCategory`,
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ Comid: adminId }),
-            }
-          );
-          const categoryData = await categoryResponse.json();
-          setCategories(categoryData);
-
-          const subCategoryResponse = await fetch(
-            `${ServerURL.PRODUCTION_HOST_URL}/api/SubCategoryApp/SelectSubCategory`,
-            {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ Comid: adminId }),
-            }
-          );
-          const subCategoryData = await subCategoryResponse.json();
-          setSubCategories(subCategoryData);
-          setLoading(false);
-        } catch (error) {
-          console.error("Error fetching data:", error);
-          setLoading(false);
+      try {
+        const data = await fetchSelectCategory(adminId);
+        if (data) {
+          setCategories(data);
         }
+      } catch (error) {
+        alert("Failed to fetch categories. Please try again.");
       }
     };
-    fetchCategories();
+
+    if (adminId) fetchCategories();
   }, [adminId]);
 
-  const handleCategoryChange = (e) => {
-    const selected = e.target.value;
-    setSelectedCategory(selected);
+  
+
+
+  const handleReorderSubmit = async () => {
+    const reorderedData = subCategories.map((item, index) => ({
+      Id: item.Id,
+      Comid: adminId,
+      SubCategory: item.SubCategory,
+      Order: index + 1,
+      Active: 1,
+    }));
+
+    try {
+      const success = await UpdateSubCategoryReorder(reorderedData);
+      
+      if (success) {
+        alert("subcategory reorder saved successfully!");
+        navigate("/SubCategoryReorder");
+      } else {
+        alert("Failed to save reorder. Please try again.");
+      }
+    } catch (error) {
+      alert("An error occurred while saving reorder.");
+      console.error(error);
+    }
   };
 
-  const filteredSubCategories = selectedCategory
-    ? subCategories.filter(
-        (sub) => sub.Category === selectedCategory
-      )
-    : subCategories;
 
   const handleDragEnd = (result) => {
     const { source, destination } = result;
+
+    // If dropped outside the list
     if (!destination) return;
-    const reordered = Array.from(filteredSubCategories);
-    const [moved] = reordered.splice(source.index, 1);
-    reordered.splice(destination.index, 0, moved);
-    setSubCategories((prev) =>
-      prev.map((sub) =>
-        reordered.some((r) => r.Id === sub.Id) ? reordered.find((r) => r.Id === sub.Id) : sub
-      )
-    );
+
+    // Reorder the array
+    const updatedSubCategories = Array.from(subCategories);
+    const [moved] = updatedSubCategories.splice(source.index, 1);
+    updatedSubCategories.splice(destination.index, 0, moved);
+
+    setSubCategories(updatedSubCategories);
+
   };
 
-  const handleUpdate = async () => {
-    const updatedData = subCategories.map((item, index) => ({
-      Id: item.Id,
-      Comid: adminId,
-      Category: item.Category,
-      Active: 1,
-    }));
-     console.log(updatedData)
-    try {
-      setLoading(true);
-      const response = await fetch(
-        `${ServerURL.PRODUCTION_HOST_URL}/api/CategoryEcomApp/UpdateCategorySorting`,
-        {
-          method: "POST",
-          
-          headers: {
-            "Content-Type": "application/json",
-   
-          },
-          body: JSON.stringify([updatedData]),
-        }
-      );
- console.log(response)
-      const result = await response.json();
-      if (result.status === 200) {
-        alert("Reorder updated successfully!");
-      } else {
-        alert("Failed to update reorder.");
-      }
-      setLoading(false);
-    } catch (error) {
-      console.error("Error updating reorder:", error);
-      setLoading(false);
-    }
-  };
 
   return (
     <div className="flex h-screen bg-gray-100">
@@ -134,59 +124,81 @@ const SubCategoryReorder = () => {
 
           <div className="mb-4">
             <select
-              value={selectedCategory}
-              onChange={handleCategoryChange}
+              value={categoryid}
               className="px-4 py-2 border rounded-md"
+              onChange={(e) => setCategoryid(e.target.value)} 
             >
               <option value="">Select a category</option>
               {categories.map((category) => (
-                <option key={category.CategoryID} value={category.Category}>
+                <option key={category.Id} value={category.Id}>
                   {category.Category}
                 </option>
               ))}
             </select>
           </div>
 
-          <div className="bg-gray-50 p-4 rounded-lg shadow-md">
-            <label className="block mb-4 text-sm font-medium text-gray-700">
-              Drag and Reorder Subcategories
+          <div className="bg-gray-50 p-6 rounded-lg shadow-md max-h-[500px] overflow-y-auto">
+              <label className="block mb-4 text-sm font-medium text-gray-700">
+             Drag and Reorder Subcategories
             </label>
-            <DragDropContext onDragEnd={handleDragEnd}>
-              <Droppable droppableId="subcategories">
-                {(provided) => (
-                  <ul
+                 <DragDropContext  onDragEnd={handleDragEnd}>
+                 <Droppable droppableId="subcategories">
+                  {(provided) =>(
+                    <ul
                     {...provided.droppableProps}
                     ref={provided.innerRef}
-                    className="space-y-2"
+                      className="space-y-2"
+                    >
+                     {subCategories.map((subcategory,index) =>(
+                  <Draggable
+                  key={subcategory.Id}
+                  draggableId={String(subcategory.Id)}
+                   className="w-full p-4 bg-gray-100 rounded-lg shadow-md hover:shadow-2xl transition duration-300 ease-in-out"
+                  index={index}
                   >
-                    {filteredSubCategories.map((subcategory, index) => (
-                      <Draggable
-                        key={subcategory.Id}
-                        draggableId={String(subcategory.Id)}
-                        index={index}
-                      >
-                        {(provided) => (
-                          <li
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            ref={provided.innerRef}
-                            className="p-3 rounded-md bg-white shadow-md cursor-move border"
-                          >
-                            {subcategory.SubCategory}
-                          </li>
-                        )}
-                      </Draggable>
-                    ))}
-                    {provided.placeholder}
-                  </ul>
-                )}
-              </Droppable>
-            </DragDropContext>
+                   {(provided)=>(
+                    <li
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                    ref={provided.innerRef}
+                    className="w-full p-4 bg-gray-100 rounded-lg shadow-md hover:shadow-2xl transition duration-300 ease-in-out"
+                    >
+                     <h3 className="text-xl font-semibold text-gray-800">{subcategory.SubCategory}</h3>
+
+                    </li>
+                   )}
+
+
+                  </Draggable>
+                     ))}
+                      {provided.placeholder}
+                    </ul>
+                  )
+
+                  }
+
+                 </Droppable>
+                 </DragDropContext>
+      {loading && (
+      <div className="mt-4 text-center">
+      <p className="text-gray-500">Loading subcategories...</p>
+     </div>
+    )}
+
+     {error && (
+      <div className="mt-4 text-center">
+      <p className="text-red-500">{error}</p>
+      </div>
+    )}
+   </div>
+
+
+
           </div>
 
           <div className="flex justify-end mt-6 space-x-4">
             <button
-              onClick={handleUpdate}
+              onClick={handleReorderSubmit}
               className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
             >
               Save Reorder
@@ -200,7 +212,7 @@ const SubCategoryReorder = () => {
           </div>
         </div>
       </div>
-    </div>
+
   );
 };
 
