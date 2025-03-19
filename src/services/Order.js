@@ -54,7 +54,7 @@ export const fetchSaleOrderview = async (objlist) => {
       throw error;
     }
   };
-  export const updatesaleorder = async ( adminId,Pid,Status,DD,DD1) => {
+  export const updatesaleorder = async ( adminId,Pid,Status,DD,DD1, WhatsAppUrl, OwnerMobileNo,userMobileNo) => {
     try {
         let objlist = {
             Comid: adminId,
@@ -67,6 +67,9 @@ export const fetchSaleOrderview = async (objlist) => {
           status: Status,
           deliverydate: DD,
           deliveryTime: DD1,
+          Whatsappaccountid:WhatsAppUrl,
+          Ownerno:OwnerMobileNo,
+          mobilenum:userMobileNo
         },
         body: JSON.stringify(objlist),
       });
@@ -82,5 +85,36 @@ export const fetchSaleOrderview = async (objlist) => {
       return false;
     }
   };
+
+
+  export const API_FetchSelectSettingsNew = async (adminId) => {
+    let objData = "";
+    let objlist = {
+        Comid:adminId,
+    };
+    try {
+        const response = await fetch(`${APIRoutes.GET_SELECTSETTINGS}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+                objData: objData,
+            },
+            body: JSON.stringify(objlist)
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok.');
+        }
+        const data = await response.json();
+       
+
+        if (!data || !Array.isArray(data.data)) {
+            throw new Error('No data found.');
+        }
+        return data.data;
+    } catch (error) {
+        console.error('Failed to fetch details:', error);
+        throw error; // Re-throw so the calling function can handle it
+    }
+};
 
  
