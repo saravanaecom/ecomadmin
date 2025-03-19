@@ -10,6 +10,9 @@ export const APIRoutes = {
     APP_SELECTCOMPANYADMIN:`${ServerURL.PRODUCTION_HOST_URL}/api/BranchApp/SelectCompanyAdmin`,
     APP_INSERTCOMPANYADMIN:`${ServerURL.PRODUCTION_HOST_URL}/api/BranchApp/InsertBranchMaster`,
     APP_SELECTAREA:`${ServerURL.PRODUCTION_HOST_URL}/api/AreaEcomApp/SelectAreaMaster`,
+    APP_SELECTDELIVERYCHARGE:`${ServerURL.PRODUCTION_HOST_URL}/api/DeliveryChargesApp/SelectDeliveryCharges`,
+    APP_INSERTDELIVERYCHARGE:`${ServerURL.PRODUCTION_HOST_URL}api/DeliveryChargesApp/InsertDeliveryCharges`,
+    APP_DELETEDELIVERYCHARGE:`${ServerURL.PRODUCTION_HOST_URL}/api/DeliveryChargesApp/DelelteDeliveryCharges`,
     APP_DELETEAREA:`${ServerURL.PRODUCTION_HOST_URL}/api/AreaEcomApp/DeleteAreaMaster`,
     APP_INSERTAREA:`${ServerURL.PRODUCTION_HOST_URL}api/AreaEcomApp/InsertAreaMaster`,
     APP_SELECTDELIVERYTIME:`${ServerURL.PRODUCTION_HOST_URL}/api/DeliveryChargesApp/SelectDeliveryTime`, 
@@ -18,7 +21,7 @@ export const APIRoutes = {
     APP_SELECTOFFERPOST:`${ServerURL.PRODUCTION_HOST_URL}/api/OfferPost/SelectOfferPost`, 
     APP_DELETEOFFERPOST:`${ServerURL.PRODUCTION_HOST_URL}/api/OfferPost/DeleteOfferPost`, 
     APP_INSERTOFFERPOST:`${ServerURL.PRODUCTION_HOST_URL}/api/OfferPost/InsertOfferPost`,
-    APP_SELECTBANNERPSOST:`${ServerURL.PRODUCTION_HOST_URL}/api/CategoryEomApp/SelectCategory`, 
+    APP_SELECTBANNERPSOST:`${ServerURL.PRODUCTION_HOST_URL}/api/CategoryEcomApp/SelectCategory`, 
     APP_DELETESUBCATEGORY:`${ServerURL.PRODUCTION_HOST_URL}/api/SubCategoryApp/DeleteSubCategory`, 
     APP_DELETEBANNERPOST:`${ServerURL.PRODUCTION_HOST_URL}/api/CategoryEcomApp/DeleteCategory`, 
     APP_APP_SELECTCATEGORY:`${ServerURL.PRODUCTION_HOST_URL}/api/CategoryEcomApp/SelectCategory`, 
@@ -51,6 +54,11 @@ export const APIRoutes = {
     APP_DELETEAREA:`${ServerURL.PRODUCTION_HOST_URL}/api/WebMobileApp/DeleteArea`,
     APP_DELETEBRAND:`${ServerURL.PRODUCTION_HOST_URL}/api/WebMobileApp/DeleteBrand`,
     APP_UPDATECUSTOMER:`${ServerURL.PRODUCTION_HOST_URL}/api/WebMobileApp/UpdateCustomerProfile`,
+    GET_SELECTSETTINGS: `${ServerURL.PRODUCTION_HOST_URL}/api/WebMobileApp//SelectSettingsNew1`,
+    APP_INSERTDRIVER:`${ServerURL.PRODUCTION_HOST_URL}/api/WebMobileApp/Insertdrivermaster`,
+    APP_SELECTDRIVER:`${ServerURL.PRODUCTION_HOST_URL}/api/WebMobileApp/SelectDriver`, 
+    APP_DELETEDRIVER:`${ServerURL.PRODUCTION_HOST_URL}/api/WebMobileApp/DeleteDriver`,
+    APP_UPDATESUBCATEGORYORDER:`${ServerURL.PRODUCTION_HOST_URL}/api/SubCategoryApp/UpdateSubCategorySorting`,
 };
 
 export default APIRoutes;

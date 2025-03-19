@@ -11,6 +11,7 @@ import AddDeliveryTime from '../pages/AddDeliveryTime';
 import OfferPost from '../pages/OfferPost';
 import AddOfferPost from '../pages/AddOfferPost';
 import BannerPost from '../pages/BannerPost';
+import AddBaner from '../pages/Addbaner'
 import Category from '../pages/Category';
 import AddCategory from '../pages/AddCategory';
 import CategoryReorder from '../pages/CategoryReorder';
@@ -31,6 +32,12 @@ import Brand from '../pages/Brand';
 import AllBrand from '../pages/AllBrand';
 import DeliveryArea from '../pages/deliveryArea';
 import AddDeliveryArea from '../pages/AddDeliveryArea';
+import AddDriver from '../pages/adddrivermaster';
+import AllDriver from '../pages/drivermaster';
+import AddDeliveryCharge from '../pages/Adddeliverycharge';
+import DeliveryCharge  from '../pages/deliverycharge';
+
+
 
 const AppRoutes = () => {
   return (
@@ -43,7 +50,11 @@ const AppRoutes = () => {
         {/* Branch Management */}
         <Route path="/branch" element={<Branch />} />
         <Route path="/branchedit/:id" element={<BranchEdit />} />
+         {/* driver master  */}
         
+         <Route path="/AddDriver/:id" element={<AddDriver />} />
+          <Route path="/AllDriver" element={<AllDriver />} />
+
         {/* Area Management */}
         <Route path="/AddArea/:id" element={<AddArea />} />
         <Route path="/Area" element={<Area />} />
@@ -52,9 +63,16 @@ const AppRoutes = () => {
         <Route path="/DeliveryTime" element={<DeliveryTime />} />
         <Route path="/AddDeliveryTime/:id" element={<AddDeliveryTime />} />
         
+           {/* AddDeliveryCharge Management */}
+           <Route path="/DeliveryCharge" element={<DeliveryCharge />} />
+        <Route path="/AddDeliveryCharge/:id" element={<AddDeliveryCharge />} />
+
+
+
         {/* Offers and Banners */}
         <Route path="/OfferPost" element={<OfferPost />} />
         <Route path="/AddOfferPost/:id" element={< AddOfferPost/>} />
+        <Route path= "/AddBaner/:id" element={< AddBaner/>} />
         <Route path="/bannerpost/:id" element={<BannerPost />} />
         <Route path="/addbannerpost/:id" element={<Addbannerpost />} />
         
@@ -91,6 +109,7 @@ const AppRoutes = () => {
 
     <Route path="/DeliveryArea" element={<DeliveryArea/>} />
     <Route path="/AddDeliveryArea/:id" element={<AddDeliveryArea/>} />
+
       </Routes>
  
   );
